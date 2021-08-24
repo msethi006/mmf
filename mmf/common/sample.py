@@ -131,6 +131,14 @@ class SampleList(OrderedDict):
 
             if isinstance(samples[0][field], collections.abc.Mapping):
                 self[field] = SampleList(self[field])
+    def __eq__(self,other):
+        if self.keys() != other.keys():
+            return False
+        for i in self.keys():
+            if type(self[i])==torch.Tensor and type(other[i])==torch.Tensor:
+                if torch.equal(self[i], other[i]) == False:
+                    return False
+        return True
 
     def _check_and_load_tuple(self, samples):
         if isinstance(samples[0], (tuple, list)) and isinstance(samples[0][0], str):
